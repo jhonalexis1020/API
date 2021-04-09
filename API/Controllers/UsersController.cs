@@ -23,10 +23,14 @@ namespace API.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<AppUser>> GetUsers()
         {
-            var users = _DataContext.Users.ToList();
-            return users;
+            return _DataContext.Users.ToList();
         }
 
+        [HttpGet("{id}")]
+        public ActionResult<AppUser> GetUser(int id)
+        {
+            return _DataContext.Users.FirstOrDefault(x => x.Id == id);
+        }
 
 
     }
