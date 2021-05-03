@@ -6,10 +6,10 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace API.Database
+namespace API.Database.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20210426120821_PasswordUser")]
+    [Migration("20210430120702_PasswordUser")]
     partial class PasswordUser
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

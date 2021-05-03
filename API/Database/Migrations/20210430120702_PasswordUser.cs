@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace API.Database
+namespace API.Database.Migrations
 {
     public partial class PasswordUser : Migration
     {
