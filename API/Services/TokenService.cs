@@ -17,7 +17,7 @@ namespace API.Services
 
         public TokenService(IConfiguration config)
         {
-            _Key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["tokenKey"]));
+            _Key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["TokenKey"]));
         }
 
         public string CreateToken(AppUser user)

@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using API.Database;
 using API.DTOs;
 using API.Entities;
+using API.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,15 +12,17 @@ namespace API.Controllers
 {
     public class AccountController : BaseController
     {
-        private DataContext _Context { get; set; }
+        private readonly DataContext _Context;
+        public readonly ITokenServices _TokenServices;
 
-        public AccountController(DataContext context)
+        public AccountController(DataContext context, ITokenServices token)
         {
             _Context = context;
+            _TokenServices = token;
         }
 
         [HttpPost("register")]
-        public async Task<ActionResult<AppUser>> Register(RegisterDTO register)
+        public async Task<ActionResult<UserDTO>> Register(RegisterDTO register)
         {
             if (await UserExisted(register.Username))
                 return BadRequest("Usuario ya registrado");
@@ -32,11 +35,15 @@ namespace API.Controllers
             };
             _Context.Users.Add(user);
             await _Context.SaveChangesAsync();
-            return user;
+            return new UserDTO
+            {
+                UserName = register.Username,
+                Token = _TokenServices.CreateToken(user)
+            };
         }
 
         [HttpPost("login")]
-        public async Task<ActionResult<AppUser>> Login(LoginDTO login)
+        public async Task<ActionResult<UserDTO>> Login(LoginDTO login)
         {
             var user = await _Context.Users.SingleAsync(x => x.UserName == login.Username);
             if (user is null) return Unauthorized("Usuario Invalido");
@@ -46,7 +53,11 @@ namespace API.Controllers
             {
                 if (computedHash[i] != user.PasswordHash[i]) return Unauthorized("Password Invalido");
             }
-            return user;
+            return new UserDTO
+            {
+                UserName = login.Username,
+                Token = _TokenServices.CreateToken(user)
+            };
         }
 
 
